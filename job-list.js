@@ -142,7 +142,10 @@ function renderJobs(jobs) {
             <p>${job.company} — ${job.location}</p>
             <p>${job.rate}</p>
             <span id="key">${job.av || job.type || 'Full Time'}</span>
-            <a href="job-details.html?id=${job.id ?? index}" class="view-btn">View Details</a>
+            <a href="job-details.html?id=${job.id ?? index}" 
+   style="padding:8px 14px; background:#877894; color:#fff; text-decoration:none; border-radius:5px;">
+   View Details
+</a>
         </li>
     `).join('');
 }

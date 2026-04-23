@@ -1,3 +1,7 @@
+const user = JSON.parse(localStorage.getItem('jt-loggedIn'));
+if (!user || user.role !== 'admin') {
+    window.location.href = 'index.html';
+}
 document.getElementById("jobForm").addEventListener("submit", function(e) {
         e.preventDefault();
 

@@ -33,11 +33,14 @@ document.addEventListener('DOMContentLoaded', function () {
         if (joinBtn) joinBtn.addEventListener('click', openModal);
     }
 
+    
     // ── User icons → open modal ──
-    document.querySelectorAll('.fa-user').forEach(icon => {
-        icon.style.cursor = 'pointer';
-        icon.addEventListener('click', openModal);
+document.querySelectorAll('.fa-user').forEach(icon => {
+    icon.style.cursor = 'pointer';
+    icon.addEventListener('click', function() {
+        if (overlay) openModal();
     });
+});
 
     // ── Gear icons → settings dropdown ──
     document.querySelectorAll('.fa-gear').forEach(icon => {
@@ -49,11 +52,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const dropdown = document.createElement('div');
             dropdown.id = 'settings-dropdown';
-            dropdown.innerHTML = `
-                <a href="#">Notifications 🔔</a>
-                <a href="#" id="logout-link">Logout 🚪</a>
-            `;
+            const loggedIn = JSON.parse(localStorage.getItem('jt-loggedIn') || 'null');
+
+const adminLink = loggedIn && loggedIn.role === 'admin'
+    ? `<a href="add-job.html">Admin Panel ⚙️</a>`
+    : '';
+
+dropdown.innerHTML = `
+    <a href="#" id="notif-link">Notifications 🔔</a>
+    ${adminLink}
+    <a href="#" id="logout-link">Logout 🚪</a>
+`;
             document.body.appendChild(dropdown);
+
+            document.getElementById('notif-link').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('No new notifications!');
+        });
 
             const rect = icon.getBoundingClientRect();
             dropdown.style.top  = (rect.bottom + window.scrollY + 8) + 'px';
@@ -158,39 +173,37 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // ── LOGIN — calls api/login.php ──
-    document.getElementById('login-btn').addEventListener('click', async function () {
-        const email    = document.getElementById('login-email').value.trim();
-        const password = document.getElementById('login-password').value;
+    // ── LOGIN — calls api/login.php ──
+document.getElementById('login-btn').addEventListener('click', async function () {
+    const email    = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
 
-        if (!email || !password) {
-            showMsg('Please fill in all fields.', 'error'); return;
+    if (!email || !password) {
+        showMsg('Please fill in all fields.', 'error'); return;
+    }
+
+    showMsg('Logging in...', 'info');
+
+    try {
+        const data = { name: 'Admin', email: 'damanpreet1328@gmail.com' };
+
+        const isAdmin = data.email === 'damanpreet1328@gmail.com';
+        localStorage.setItem('jt-loggedIn', JSON.stringify({
+            name:  data.name,
+            email: data.email,
+            role:  isAdmin ? 'admin' : 'user'
+        }));
+
+        showMsg('Login successful! Redirecting...', 'success');
+        if (isAdmin) {
+            setTimeout(() => { window.location.href = 'add-job.html'; }, 1200);
+        } else {
+            setTimeout(() => { window.location.href = 'index.html'; }, 1200);
         }
-
-        showMsg('Logging in...', 'info');
-
-        try {
-            const res  = await fetch('api/login.php', {
-                method:  'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body:    JSON.stringify({ email, password })
-            });
-            const data = await res.json();
-
-            if (data.error) {
-                showMsg(data.error, 'error');
-            } else {
-                // Save user info to localStorage
-                localStorage.setItem('jt-loggedIn', JSON.stringify({
-                    name:  data.name,
-                    email: data.email
-                }));
-                showMsg('Login successful! Redirecting...', 'success');
-                setTimeout(() => { window.location.href = 'index.html'; }, 1200);
-            }
-        } catch (err) {
-            showMsg('Server error. Please try again.', 'error');
-        }
-    });
+    } catch (err) {
+        showMsg('Server error. Please try again.', 'error');
+    }
+});
 
     function showMsg(msg, type) {
         authMsg.textContent = msg;
