@@ -6,6 +6,7 @@
     <title>Document</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="auth.css">
 </head>
 <body>
     <header>
@@ -14,11 +15,11 @@
 
             <ul id="nav-menu">
                 <li><a href="#">Home</a></li>
-                <li><a href="">Add Job</a></li>
+                <li><a href="add-job.html">Add Job</a></li>
                 <li><a href="job.html">Browse Jobs</a></li>
                 <!-- <li><a href="">Analytics/Reports</a></li> -->
                  <li><a href="contact.html">Contact</a></li>
-                 <li><button id="join-btn">Join</button></li>
+                 <li><a href="modal.html"><button id="join-btn">Join</button></a></li>
                  <li id="right-icons-mobile">
                     <i class="fa-solid fa-user"></i>
                     <i class="fa-solid fa-gear"></i>
@@ -45,15 +46,15 @@
                 <p>Search for jobs across different industries and locations!</p>
                 <div class="search">
                     <form id="job-search">
-                        <input type="text" placeholder="Job title, keyword, or company">
-                        <input type="text" placeholder="Location">
+                        <input type="text" id="job" placeholder="Job title, keyword, or company">
+                        <input type="text" id="location" placeholder="Location">
                         <button type="submit">Search</button>
                     </form>
                 </div>
             </div>
 
             <div class="hero-right">
-                <img src="home-img.png" alt="hero-section img">
+                <img src="JOB_MAIN.png" alt="hero-section img">
             </div>
         </div>
     </section>
@@ -154,7 +155,7 @@
                     <span class="skills">CSS</span>
                     <span class="skills">JS</span>
                 </div>
-                <a href="#" class="team-btn">View Profile</a>
+                <a href="profile.html?id=0" class="team-btn">View Profile</a>  <!-- Robert Fox -->
             </div>
             <div class="f1-box">
                 <img src="fl-2.png" alt="team-img">
@@ -164,7 +165,7 @@
                     <span class="skills">CSS</span>
                     <span class="skills">JS</span>
                 </div>
-                <a href="#" class="team-btn">View Profile</a>
+                <a href="profile.html?id=1" class="team-btn">View Profile</a>  <!-- Kristin Watson -->
             </div>
             <div class="f1-box">
                 <img src="fl-3.png" alt="team-img">
@@ -174,7 +175,7 @@
                     <span class="skills">CSS</span>
                     <span class="skills">JS</span>
                 </div>
-                <a href="#" class="team-btn">View Profile</a>
+                <a href="profile.html?id=2" class="team-btn">View Profile</a>  <!-- Darrell Steward -->
             </div>
             <div class="f1-box">
                 <img src="fl-4.png" alt="team-img">
@@ -184,7 +185,7 @@
                     <span class="skills">CSS</span>
                     <span class="skills">JS</span>
                 </div>
-                <a href="#" class="team-btn">View Profile</a>
+                <a href="profile.html?id=3" class="team-btn">View Profile</a>  <!-- Theresa Webb -->
             </div>
         </div>
     </section>
@@ -235,9 +236,67 @@
         </div>
     </footer>
 
+    <!-- Auth Modal -->
+<div class="auth-overlay hidden" id="auth-overlay">
+    <div class="auth-modal">
+        <button class="close-btn" id="close-modal"><i class="fa-solid fa-xmark"></i></button>
+        <div class="auth-tabs">
+            <button class="tab-btn active" id="login-tab">Login</button>
+            <button class="tab-btn" id="signup-tab">Sign Up</button>
+        </div>
+        <div class="auth-form active" id="login-form">
+            <h2>Welcome Back</h2>
+            <p>Login to your Job-Tracker account</p>
+            <div class="input-group">
+                <i class="fa-solid fa-envelope"></i>
+                <input type="email" id="login-email" placeholder="Email address">
+            </div>
+            <div class="input-group">
+                <i class="fa-solid fa-lock"></i>
+                <input type="password" id="login-password" placeholder="Password">
+                <i class="fa-solid fa-eye toggle-pass" id="toggle-login-pass"></i>
+            </div>
+            <div class="form-options">
+                <label><input type="checkbox"> Remember me</label>
+                <a href="#">Forgot password?</a>
+            </div>
+            <button class="auth-btn" id="login-btn">Login</button>
+            <p class="switch-text">Don't have an account? <span id="go-signup">Sign Up</span></p>
+        </div>
+        <div class="auth-form" id="signup-form">
+            <h2>Create Account</h2>
+            <p>Join Job-Tracker today</p>
+            <div class="input-group">
+                <i class="fa-solid fa-user"></i>
+                <input type="text" id="signup-name" placeholder="Full name">
+            </div>
+            <div class="input-group">
+                <i class="fa-solid fa-envelope"></i>
+                <input type="email" id="signup-email" placeholder="Email address">
+            </div>
+            <div class="input-group">
+                <i class="fa-solid fa-lock"></i>
+                <input type="password" id="signup-password" placeholder="Password">
+                <i class="fa-solid fa-eye toggle-pass" id="toggle-signup-pass"></i>
+            </div>
+            <div class="input-group">
+                <i class="fa-solid fa-lock"></i>
+                <input type="password" id="signup-confirm" placeholder="Confirm password">
+            </div>
+            <button class="auth-btn" id="signup-btn">Create Account</button>
+            <p class="switch-text">Already have an account? <span id="go-login">Login</span></p>
+        </div>
+        <div class="auth-message" id="auth-message"></div>
+    </div>
+</div>
+
+<script src="toggle.js"></script>
+<script src="auth.js"></script>
+
     
 
     <script src="script.js"></script>
     <script src="toggle.js"></script>
+    <script src="search-button-home.js"></script>
 </body>
 </html>

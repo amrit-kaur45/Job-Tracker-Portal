@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact - Job Tracker</title>
+    <title>Add Job - Job Tracker</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="auth.css">
 </head>
-<body>
+<body class="addJob-body">
+
     <header>
         <div class="navbar">
             <a href="index.html" id="nav-logo"><i class="fa-solid fa-user-tie"></i>Job-Tracker</a>
@@ -31,75 +32,79 @@
         </div>
     </header>
 
-    <section class="contact">
-        <div class="contact-img">
-            <h2>Get in touch</h2>
-            <p>Most viewed and all-time top-selling services</p>
-            <img src="contact.svg" alt="contact-img">
+    <h2 class="page-title">Add New Job</h2>
+
+    <form id="jobForm" class="job-form">
+
+        <div class="form-group">
+            <label for="company">Company Name</label>
+            <input type="text" id="company" class="form-input" required>
         </div>
 
-        <form id="contact-form">
-            <label for="name">Name: </label>
-            <input type="text" name="name" id="name" autocomplete="off" required>
-
-            <label for="email">Email: </label>
-            <input type="email" name="email" id="email" autocomplete="off" required>
-
-            <label for="message">Message: </label>
-            <textarea rows="5" name="message" id="message" required></textarea>
-
-            <input type="submit" id="submit-form" value="Submit">
-            <p id="contact-msg" style="margin-top: 12px; font-size: 14px; font-weight: 500;"></p>
-        </form>
-    </section>
-
-    <section class="map">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d387193.0506281772!2d-74.30917063299817!3d40.6971933466018!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2sin!4v1774779947477!5m2!1sen!2sin" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-    </section>
-
-    <footer class="footer">
-        <div>
-            <div class="top">
-                <div class="footer-left">
-                    <p>Search your desired jobs.</p>
-                </div>
-                <div class="footer-right">
-                    <p>Contact us</p>
-                    <a href="#"><i class="fa-regular fa-envelope"></i></a>
-                    <a href="#"><i class="fa-brands fa-facebook"></i></a>
-                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
-                </div>
-            </div>
-            <div class="bottom">
-                <div>
-                    <h3>Project</h3>
-                    <a href="#">Change Log</a>
-                    <a href="#">Status</a>
-                    <a href="#">Status License</a>
-                    <a href="#">All Versions</a>
-                </div>
-                <div>
-                    <h3>Community</h3>
-                    <a href="#">GitHub</a>
-                    <a href="#">Issues</a>
-                    <a href="#">Project</a>
-                    <a href="#">Twitter</a>
-                </div>
-                <div>
-                    <h3>Help</h3>
-                    <a href="#">Support</a>
-                    <a href="#">Troubleshooting</a>
-                    <a href="#">Contact Us</a>
-                </div>
-                <div>
-                    <h3>Others</h3>
-                    <a href="#">Terms of Service</a>
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">License</a>
-                </div>
-            </div>
+        <div class="form-group">
+            <label for="title">Job Title</label>
+            <input type="text" id="title" class="form-input" required>
         </div>
-    </footer>
+
+        <div class="form-group">
+            <label for="location">Location</label>
+            <input type="text" id="location" class="form-input" required>
+        </div>
+
+        <div class="form-group">
+            <label for="rate">Salary / Rate</label>
+            <input type="text" id="rate" class="form-input" placeholder="e.g. $900 - $1200/m" required>
+        </div>
+
+        <div class="form-group">
+            <label for="hours">Working Hours</label>
+            <input type="text" id="hours" class="form-input" placeholder="e.g. 9am - 5pm">
+        </div>
+
+        <div class="form-group">
+            <label for="vacancy">Vacancies</label>
+            <input type="number" id="vacancy" class="form-input" placeholder="e.g. 3" min="1">
+        </div>
+
+        <div class="form-group">
+            <label for="type">Job Type</label>
+            <select id="type" class="form-input">
+                <option>Full Time</option>
+                <option>Part Time</option>
+                <option>Freelancer</option>
+                <option>Internship</option>
+                <option>Remote</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="workplace">Workplace</label>
+            <select id="workplace" class="form-input">
+                <option>On-site</option>
+                <option>Remote</option>
+                <option>Hybrid</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="education">Education Required</label>
+            <input type="text" id="education" class="form-input" placeholder="e.g. Bachelor's Degree">
+        </div>
+
+        <div class="form-group">
+            <label for="experience">Experience Required</label>
+            <input type="text" id="experience" class="form-input" placeholder="e.g. 2+ years">
+        </div>
+
+        <div class="form-group">
+            <label for="description">Job Description</label>
+            <textarea id="description" class="form-input" rows="4" required></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn">Add Job</button>
+        <p id="job-msg" style="text-align:center; margin-top:12px; font-size:14px; font-weight:500;"></p>
+
+    </form>
 
     <!-- Auth Modal -->
     <div class="auth-overlay hidden" id="auth-overlay">
@@ -158,35 +163,46 @@
     <script src="toggle.js"></script>
     <script src="auth.js"></script>
     <script>
-        document.getElementById('contact-form').addEventListener('submit', async function(e) {
+        document.getElementById('jobForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            const name    = document.getElementById('name').value.trim();
-            const email   = document.getElementById('email').value.trim();
-            const message = document.getElementById('message').value.trim();
-            const msg     = document.getElementById('contact-msg');
+            const msg = document.getElementById('job-msg');
 
-            if (!name || !email || !message) {
-                msg.textContent = 'Please fill in all fields.';
+            const jobData = {
+                company:     document.getElementById('company').value.trim(),
+                title:       document.getElementById('title').value.trim(),
+                location:    document.getElementById('location').value.trim(),
+                rate:        document.getElementById('rate').value.trim(),
+                hours:       document.getElementById('hours').value.trim(),
+                vacancy:     document.getElementById('vacancy').value.trim(),
+                type:        document.getElementById('type').value,
+                workplace:   document.getElementById('workplace').value,
+                education:   document.getElementById('education').value.trim(),
+                experience:  document.getElementById('experience').value.trim(),
+                description: document.getElementById('description').value.trim()
+            };
+
+            if (!jobData.company || !jobData.title || !jobData.location || !jobData.description) {
+                msg.textContent = 'Please fill in all required fields.';
                 msg.style.color = 'red';
                 return;
             }
 
-            msg.textContent = 'Sending...';
+            msg.textContent = 'Adding job...';
             msg.style.color = '#888';
 
             try {
-                const res  = await fetch('api/contact.php', {
+                const res  = await fetch('api/add-job.php', {
                     method:  'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body:    JSON.stringify({ name, email, message })
+                    body:    JSON.stringify(jobData)
                 });
                 const data = await res.json();
 
                 if (data.success) {
-                    msg.textContent = '✅ Message sent successfully!';
+                    msg.textContent = '✅ Job added successfully!';
                     msg.style.color = 'green';
-                    document.getElementById('contact-form').reset();
+                    document.getElementById('jobForm').reset();
                 } else {
                     msg.textContent = '❌ ' + data.error;
                     msg.style.color = 'red';
@@ -197,5 +213,6 @@
             }
         });
     </script>
+
 </body>
 </html>

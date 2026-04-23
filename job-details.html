@@ -3,48 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Job Details - Job Tracker</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="auth.css">
 </head>
 <body>
     <header>
         <div class="navbar">
             <a href="index.html" id="nav-logo"><i class="fa-solid fa-user-tie"></i>Job-Tracker</a>
-
             <ul id="nav-menu">
                 <li><a href="index.html">Home</a></li>
-                <li><a href="">Add Job</a></li>
+                <li><a href="add-job.html">Add Job</a></li>
                 <li><a href="job.html">Browse Jobs</a></li>
-                <!-- <li><a href="">Analytics/Reports</a></li> -->
-                 <li><a href="contact.html">Contact</a></li>
-                 <li><button id="join-btn">Join</button></li>
-                 <li id="right-icons-mobile">
+                <li><a href="contact.html">Contact</a></li>
+                <li><button id="join-btn">Join</button></li>
+                <li id="right-icons-mobile">
                     <i class="fa-solid fa-user"></i>
                     <i class="fa-solid fa-gear"></i>
-                    
-                 </li>
+                </li>
             </ul>
-
             <div id="right-icons">
-                    <i class="fa-solid fa-user"></i>
-                    <i class="fa-solid fa-gear"></i>
-                    
+                <i class="fa-solid fa-user"></i>
+                <i class="fa-solid fa-gear"></i>
             </div>
-
             <i id="bar-icon" class="fa-solid fa-bars"></i>
         </div>
     </header>
 
-    <div id="jobDetails" class="extra-space-top">
-    </div>
+    <div id="jobDetails" class="extra-space-top"></div>
 
     <footer class="footer">
         <div>
             <div class="top">
                 <div class="footer-left">
-                    <!-- <img class="logo-footer">  yet to be done -->
-                     <p>Search your desired jobs.</p>
+                    <p>Search your desired jobs.</p>
                 </div>
                 <div class="footer-right">
                     <p>Contact us</p>
@@ -53,7 +46,6 @@
                     <a href="#"><i class="fa-brands fa-twitter"></i></a>
                 </div>
             </div>
-
             <div class="bottom">
                 <div>
                     <h3>Project</h3>
@@ -85,74 +77,241 @@
         </div>
     </footer>
 
-    
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const urlParam = new URLSearchParams(window.location.search);
-            const index = urlParam.get("id");
-            const selectJob = jobCategory[index];
+    <!-- Apply Modal -->
+    <div id="apply-overlay" class="auth-overlay hidden">
+        <div class="auth-modal">
+            <button class="close-btn" onclick="document.getElementById('apply-overlay').classList.add('hidden')">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h2 id="apply-job-title" style="color:#1a1a1a; margin-bottom:4px;"></h2>
+            <p id="apply-company-name" style="color:#888; font-size:14px; margin-bottom:20px;"></p>
+            <div class="input-group">
+                <i class="fa-solid fa-user"></i>
+                <input type="text" id="apply-name" placeholder="Full name *">
+            </div>
+            <div class="input-group">
+                <i class="fa-solid fa-envelope"></i>
+                <input type="email" id="apply-email" placeholder="Email address *">
+            </div>
+            <div class="input-group">
+                <i class="fa-solid fa-phone"></i>
+                <input type="tel" id="apply-phone" placeholder="Phone number *">
+            </div>
+            <button class="auth-btn" id="apply-submit">Submit Application</button>
+            <p id="apply-msg" style="text-align:center; font-size:14px; margin-top:10px;"></p>
+        </div>
+    </div>
 
-            const jobDetailsContainer = document.getElementById("jobDetails");
-            jobDetailsContainer.innerHTML = `
-
-            <div class="job-header">
-            <div class="job-img-row">
-                <img src="${selectJob.image}" alt="image">
-                <div>
-                    <h2>${selectJob.company}</h2>
-                    <span>${selectJob.location}</span>
+    <!-- Auth Modal -->
+    <div class="auth-overlay hidden" id="auth-overlay">
+        <div class="auth-modal">
+            <button class="close-btn" id="close-modal"><i class="fa-solid fa-xmark"></i></button>
+            <div class="auth-tabs">
+                <button class="tab-btn active" id="login-tab">Login</button>
+                <button class="tab-btn" id="signup-tab">Sign Up</button>
+            </div>
+            <div class="auth-form active" id="login-form">
+                <h2>Welcome Back</h2>
+                <p>Login to your Job-Tracker account</p>
+                <div class="input-group">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="email" id="login-email" placeholder="Email address">
                 </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="login-password" placeholder="Password">
+                    <i class="fa-solid fa-eye toggle-pass" id="toggle-login-pass"></i>
+                </div>
+                <div class="form-options">
+                    <label><input type="checkbox"> Remember me</label>
+                    <a href="#">Forgot password?</a>
+                </div>
+                <button class="auth-btn" id="login-btn">Login</button>
+                <p class="switch-text">Don't have an account? <span id="go-signup">Sign Up</span></p>
             </div>
-            <button href="#">Apply now</button>
-        </div>
-
-        <div class="features">
-        <div class="fe-box">
-            <div class="fe-box-in">
-                <img src="vacancy.png" alt="vacancy-image">
-                <h3>Vacancy</h3>
-                <p>${selectJob.vacancy}</p>
+            <div class="auth-form" id="signup-form">
+                <h2>Create Account</h2>
+                <p>Join Job-Tracker today</p>
+                <div class="input-group">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" id="signup-name" placeholder="Full name">
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-envelope"></i>
+                    <input type="email" id="signup-email" placeholder="Email address">
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="signup-password" placeholder="Password">
+                    <i class="fa-solid fa-eye toggle-pass" id="toggle-signup-pass"></i>
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="signup-confirm" placeholder="Confirm password">
+                </div>
+                <button class="auth-btn" id="signup-btn">Create Account</button>
+                <p class="switch-text">Already have an account? <span id="go-login">Login</span></p>
             </div>
-            <div class="fe-box-in">
-                <img src="fe 1.png" alt="position-image">
-                <h3>Position</h3>
-                <p>${selectJob.title}</p>
-            </div>
-            <div class="fe-box-in">
-                <img src="hour.png" alt="hour-image">
-                <h3>Hours</h3>
-                <p>${selectJob.hours}</p>
-            </div>
-            <div class="fe-box-in">
-                <img src="salary.png" alt="salary-image">
-                <h3>Salary</h3>
-                <p>${selectJob.rate}</p>
-            </div>
+            <div class="auth-message" id="auth-message"></div>
         </div>
     </div>
-    <div class="job-description">
-        <h3>Job Description</h3>
-        <p>${selectJob.description}</p>
-        
-        <h3>Employment Status</h3>
-        <p>- ${selectJob.av}</p>
-
-        <h3>Workplace</h3>
-        <p>- ${selectJob.workplace}</p>
-
-        <h3>Educational Requirements</h3>
-        <p>- ${selectJob.education}</p>
-
-        <h3>Experience Requirements</h3>
-        <p>- ${selectJob.experience}</p>
-    </div>
-
-            `
-        });
-    </script>
 
     <script src="job-list.js"></script>
-    <script src="toggle.js"></script>
-    <script src="job-search.js"></script>
+<script src="toggle.js"></script>
+<script src="auth.js"></script>
+<script>
+    const urlParam = new URLSearchParams(window.location.search);
+    const jobId    = urlParam.get("id");
+
+    async function loadJobDetails() {
+        let job = null;
+
+        // Try DB first
+        try {
+            const res  = await fetch('api/get-jobs.php');
+            const jobs = await res.json();
+            if (Array.isArray(jobs)) {
+                job = jobs.find(j => String(j.id) === String(jobId));
+            }
+        } catch(e) {}
+
+        // Fallback to hardcoded
+        if (!job && typeof hardcodedJobs !== 'undefined') {
+            job = hardcodedJobs[jobId];
+        }
+
+        // Last fallback to jobCategory
+        if (!job && typeof jobCategory !== 'undefined') {
+            job = jobCategory[jobId];
+        }
+
+        if (!job) {
+            document.getElementById('jobDetails').innerHTML =
+                '<p style="text-align:center; padding:60px; color:#888;">Job not found. <a href="job.html">Go back</a></p>';
+            return;
+        }
+
+        document.getElementById('jobDetails').innerHTML = `
+            <div class="job-header">
+                <div class="job-img-row">
+                    <img src="${job.image || 'google.png'}" alt="image" onerror="this.src='google.png'">
+                    <div>
+                        <h2>${job.company}</h2>
+                        <span>${job.location}</span>
+                    </div>
+                </div>
+                <button id="apply-btn">Apply Now</button>
+            </div>
+
+            <div class="features">
+                <div class="fe-box">
+                    <div class="fe-box-in">
+                        <img src="vacancy.png" alt="vacancy-image">
+                        <h3>Vacancy</h3>
+                        <p>${job.vacancy}</p>
+                    </div>
+                    <div class="fe-box-in">
+                        <img src="fe 1.png" alt="position-image">
+                        <h3>Position</h3>
+                        <p>${job.title}</p>
+                    </div>
+                    <div class="fe-box-in">
+                        <img src="hour.png" alt="hour-image">
+                        <h3>Hours</h3>
+                        <p>${job.hours}</p>
+                    </div>
+                    <div class="fe-box-in">
+                        <img src="salary.png" alt="salary-image">
+                        <h3>Salary</h3>
+                        <p>${job.rate}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="job-description">
+                <h3>Job Description</h3>
+                <p>${job.description}</p>
+
+                <h3>Employment Status</h3>
+                <p>- ${job.av || job.type || 'Full Time'}</p>
+
+                <h3>Workplace</h3>
+                <p>- ${job.workplace}</p>
+
+                <h3>Educational Requirements</h3>
+                <p>- ${job.education}</p>
+
+                <h3>Experience Requirements</h3>
+                <p>- ${job.experience}</p>
+            </div>
+        `;
+
+        // Apply button
+        document.getElementById('apply-btn').addEventListener('click', function() {
+            document.getElementById('apply-job-title').textContent   = 'Apply for ' + job.title;
+            document.getElementById('apply-company-name').textContent = job.company;
+            document.getElementById('apply-overlay').classList.remove('hidden');
+        });
+    }
+
+    // Wait for job-list.js to finish loading then run
+    window.addEventListener('load', loadJobDetails);
+
+    // Submit application
+    document.addEventListener('click', function(e) {
+        if (e.target.id !== 'apply-submit') return;
+
+        const name  = document.getElementById('apply-name').value.trim();
+        const email = document.getElementById('apply-email').value.trim();
+        const phone = document.getElementById('apply-phone').value.trim();
+        const msg   = document.getElementById('apply-msg');
+
+        if (!name || !email || !phone) {
+            msg.textContent = 'Please fill in all required fields.';
+            msg.style.color = 'red';
+            return;
+        }
+
+        msg.textContent = 'Submitting...';
+        msg.style.color = '#888';
+
+        const formData = new FormData();
+        formData.append('job_id', jobId);
+        formData.append('name',   name);
+        formData.append('email',  email);
+        formData.append('phone',  phone);
+
+        fetch('api/apply.php', {
+            method: 'POST',
+            body:   formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                msg.textContent = '✅ Application submitted!';
+                msg.style.color = 'green';
+                document.getElementById('apply-name').value  = '';
+                document.getElementById('apply-email').value = '';
+                document.getElementById('apply-phone').value = '';
+                setTimeout(() => {
+                    document.getElementById('apply-overlay').classList.add('hidden');
+                    msg.textContent = '';
+                }, 1800);
+            } else {
+                msg.textContent = '❌ ' + data.error;
+                msg.style.color = 'red';
+            }
+        })
+        .catch(() => {
+            msg.textContent = '❌ Server error. Please try again.';
+            msg.style.color = 'red';
+        });
+    });
+
+    // Close apply modal
+    document.getElementById('apply-overlay').addEventListener('click', function(e) {
+        if (e.target === this) this.classList.add('hidden');
+    });
+</script>
 </body>
 </html>

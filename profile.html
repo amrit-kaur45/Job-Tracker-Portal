@@ -3,63 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Freelancer Profile - Job Tracker</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="profile.css">
 </head>
 <body>
     <header>
         <div class="navbar">
             <a href="index.html" id="nav-logo"><i class="fa-solid fa-user-tie"></i>Job-Tracker</a>
-
             <ul id="nav-menu">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="add-job.html">Add Job</a></li>
-                <li><a href="#">Browse Jobs</a></li>
-                <!-- <li><a href="">Analytics/Reports</a></li> -->
-                 <li><a href="contact.html">Contact</a></li>
-                 <li><a href="modal.html"><button id="join-btn">Join</button></a></li>
-                 <li id="right-icons-mobile">
+                <li><a href="job.html">Browse Jobs</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><button id="join-btn">Join</button></li>
+                <li id="right-icons-mobile">
                     <i class="fa-solid fa-user"></i>
                     <i class="fa-solid fa-gear"></i>
-                    
-                 </li>
+                </li>
             </ul>
-
             <div id="right-icons">
-                    <i class="fa-solid fa-user"></i>
-                    <i class="fa-solid fa-gear"></i>
-                    
+                <i class="fa-solid fa-user"></i>
+                <i class="fa-solid fa-gear"></i>
             </div>
-
             <i id="bar-icon" class="fa-solid fa-bars"></i>
         </div>
     </header>
 
-    
-    <section class="jobs extra-space-top">
-        <h2>Jobs in demand</h2>
-        <p>Most viewed and all-time top-selling services</p>
-
-        <form>
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <input type="text" placeholder="Search jobs" id="search-bar">
-        </form>
-
-        
-        <div class="jobs-container" id="root">
+    <section class="profile-section">
+        <div class="profile-card" id="profile-card">
+            <!-- Filled by JS -->
+            <div class="profile-loading">Loading profile...</div>
         </div>
-        
     </section>
-
-   
 
     <footer class="footer">
         <div>
             <div class="top">
                 <div class="footer-left">
-                    <!-- <img class="logo-footer">  yet to be done -->
-                     <p>Search your desired jobs.</p>
+                    <p>Search your desired jobs.</p>
                 </div>
                 <div class="footer-right">
                     <p>Contact us</p>
@@ -68,7 +51,6 @@
                     <a href="#"><i class="fa-brands fa-twitter"></i></a>
                 </div>
             </div>
-
             <div class="bottom">
                 <div>
                     <h3>Project</h3>
@@ -100,10 +82,8 @@
         </div>
     </footer>
 
-    
-
-    <script src="job-list.js"></script>
     <script src="toggle.js"></script>
-    <script src="job-search.js"></script>
+    <script src="auth.js"></script>
+    <script src="profile.js"></script>
 </body>
 </html>
