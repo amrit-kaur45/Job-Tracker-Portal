@@ -192,11 +192,11 @@
             msg.style.color = '#888';
 
             try {
-                const res  = await fetch('api/add-job.php', {
-                    method:  'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body:    JSON.stringify(jobData)
-                });
+                const res = await fetch('/Job-Tracker-Portal/api/add-job.php', {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body:    JSON.stringify(jobData)
+});
                 const data = await res.json();
 
                 if (data.success) {

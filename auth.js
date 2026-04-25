@@ -1,19 +1,18 @@
 document.addEventListener('DOMContentLoaded', function () {
 
-    const overlay  = document.getElementById('auth-overlay');
-    const closeBtn = document.getElementById('close-modal');
+    const overlay   = document.getElementById('auth-overlay');
+    const closeBtn  = document.getElementById('close-modal');
     const loginTab  = document.getElementById('login-tab');
     const signupTab = document.getElementById('signup-tab');
     const loginForm  = document.getElementById('login-form');
     const signupForm = document.getElementById('signup-form');
-    const goSignup = document.getElementById('go-signup');
-    const goLogin  = document.getElementById('go-login');
-    const authMsg  = document.getElementById('auth-message');
+    const goSignup  = document.getElementById('go-signup');
+    const goLogin   = document.getElementById('go-login');
+    const authMsg   = document.getElementById('auth-message');
 
-    // ── Apply saved dark mode on every page load ──
-    if (localStorage.getItem('darkMode') === 'true') {
-        document.body.classList.add('dark-mode');
-    }
+// ── Dynamic base URL ──
+const base = window.location.origin + window.location.pathname.split('/').slice(0, 2).join('/');
+const API  = base + '/api';
 
     function openModal() {
         if (overlay) overlay.classList.remove('hidden');
@@ -24,23 +23,21 @@ document.addEventListener('DOMContentLoaded', function () {
     const joinBtn  = document.getElementById('join-btn');
 
     if (loggedIn) {
-        // User is logged in — change Join button to username
         if (joinBtn) {
-            joinBtn.textContent = loggedIn.name.split(' ')[0];
+            joinBtn.textContent  = loggedIn.name.split(' ')[0];
             joinBtn.style.cursor = 'default';
         }
     } else {
         if (joinBtn) joinBtn.addEventListener('click', openModal);
     }
 
-    
     // ── User icons → open modal ──
-document.querySelectorAll('.fa-user').forEach(icon => {
-    icon.style.cursor = 'pointer';
-    icon.addEventListener('click', function() {
-        if (overlay) openModal();
+    document.querySelectorAll('.fa-user').forEach(icon => {
+        icon.style.cursor = 'pointer';
+        icon.addEventListener('click', function () {
+            if (overlay) openModal();
+        });
     });
-});
 
     // ── Gear icons → settings dropdown ──
     document.querySelectorAll('.fa-gear').forEach(icon => {
@@ -51,28 +48,26 @@ document.querySelectorAll('.fa-user').forEach(icon => {
             if (existing) { existing.remove(); return; }
 
             const dropdown = document.createElement('div');
-            dropdown.id = 'settings-dropdown';
-            const loggedIn = JSON.parse(localStorage.getItem('jt-loggedIn') || 'null');
+            dropdown.id    = 'settings-dropdown';
+            const user     = JSON.parse(localStorage.getItem('jt-loggedIn') || 'null');
+            const adminLink = user && user.role === 'admin'
+                ? `<a href="add-job.html">Admin Panel ⚙️</a>` : '';
 
-const adminLink = loggedIn && loggedIn.role === 'admin'
-    ? `<a href="add-job.html">Admin Panel ⚙️</a>`
-    : '';
-
-dropdown.innerHTML = `
-    <a href="#" id="notif-link">Notifications 🔔</a>
-    ${adminLink}
-    <a href="#" id="logout-link">Logout 🚪</a>
-`;
+            dropdown.innerHTML = `
+                <a href="#" id="notif-link">Notifications 🔔</a>
+                ${adminLink}
+                <a href="#" id="logout-link">Logout 🚪</a>
+            `;
             document.body.appendChild(dropdown);
-
-            document.getElementById('notif-link').addEventListener('click', function(e) {
-            e.preventDefault();
-            alert('No new notifications!');
-        });
 
             const rect = icon.getBoundingClientRect();
             dropdown.style.top  = (rect.bottom + window.scrollY + 8) + 'px';
             dropdown.style.left = (rect.left - 110) + 'px';
+
+            document.getElementById('notif-link').addEventListener('click', function (e) {
+                e.preventDefault();
+                alert('No new notifications!');
+            });
 
             document.getElementById('logout-link').addEventListener('click', function (e) {
                 e.preventDefault();
@@ -90,19 +85,18 @@ dropdown.innerHTML = `
         if (d) d.remove();
     });
 
-    // ── Stop here if modal doesn't exist on this page ──
     if (!overlay) return;
 
     // ── Toggle password visibility ──
     document.getElementById('toggle-login-pass').addEventListener('click', function () {
         const pass = document.getElementById('login-password');
-        pass.type = pass.type === 'password' ? 'text' : 'password';
+        pass.type  = pass.type === 'password' ? 'text' : 'password';
         this.classList.toggle('fa-eye-slash');
     });
 
     document.getElementById('toggle-signup-pass').addEventListener('click', function () {
         const pass = document.getElementById('signup-password');
-        pass.type = pass.type === 'password' ? 'text' : 'password';
+        pass.type  = pass.type === 'password' ? 'text' : 'password';
         this.classList.toggle('fa-eye-slash');
     });
 
@@ -134,7 +128,7 @@ dropdown.innerHTML = `
         if (e.target === overlay) overlay.classList.add('hidden');
     });
 
-    // ── SIGNUP — calls api/register.php ──
+    // ── SIGNUP ──
     document.getElementById('signup-btn').addEventListener('click', async function () {
         const name     = document.getElementById('signup-name').value.trim();
         const email    = document.getElementById('signup-email').value.trim();
@@ -154,12 +148,13 @@ dropdown.innerHTML = `
         showMsg('Creating account...', 'info');
 
         try {
-            const res  = await fetch('api/register.php', {
+            const res  = await fetch(API + '/register.php', {
                 method:  'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body:    JSON.stringify({ name, email, password })
             });
-            const data = await res.json();
+            const text = await res.text();
+            const data = JSON.parse(text);
 
             if (data.error) {
                 showMsg(data.error, 'error');
@@ -168,42 +163,48 @@ dropdown.innerHTML = `
                 setTimeout(showLogin, 1500);
             }
         } catch (err) {
-            showMsg('Server error. Please try again.', 'error');
+            showMsg('Error: ' + err.message, 'error');
         }
     });
 
-    // ── LOGIN — calls api/login.php ──
-    // ── LOGIN — calls api/login.php ──
-document.getElementById('login-btn').addEventListener('click', async function () {
-    const email    = document.getElementById('login-email').value.trim();
-    const password = document.getElementById('login-password').value;
+    // ── LOGIN ──
+    document.getElementById('login-btn').addEventListener('click', async function () {
+        const email    = document.getElementById('login-email').value.trim();
+        const password = document.getElementById('login-password').value;
 
-    if (!email || !password) {
-        showMsg('Please fill in all fields.', 'error'); return;
-    }
-
-    showMsg('Logging in...', 'info');
-
-    try {
-        const data = { name: 'Admin', email: 'damanpreet1328@gmail.com' };
-
-        const isAdmin = data.email === 'damanpreet1328@gmail.com';
-        localStorage.setItem('jt-loggedIn', JSON.stringify({
-            name:  data.name,
-            email: data.email,
-            role:  isAdmin ? 'admin' : 'user'
-        }));
-
-        showMsg('Login successful! Redirecting...', 'success');
-        if (isAdmin) {
-            setTimeout(() => { window.location.href = 'add-job.html'; }, 1200);
-        } else {
-            setTimeout(() => { window.location.href = 'index.html'; }, 1200);
+        if (!email || !password) {
+            showMsg('Please fill in all fields.', 'error'); return;
         }
-    } catch (err) {
-        showMsg('Server error. Please try again.', 'error');
-    }
-});
+
+        showMsg('Logging in...', 'info');
+
+        try {
+            const res  = await fetch(API + '/login.php', {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body:    JSON.stringify({ email, password })
+            });
+            const text = await res.text();
+            const data = JSON.parse(text);
+
+            if (data.error) {
+                showMsg(data.error, 'error');
+            } else {
+                const isAdmin = data.email === 'damanpreet1328@gmail.com';
+                localStorage.setItem('jt-loggedIn', JSON.stringify({
+                    name:  data.name,
+                    email: data.email,
+                    role:  isAdmin ? 'admin' : 'user'
+                }));
+                showMsg('Login successful! Redirecting...', 'success');
+                setTimeout(() => {
+                    window.location.href = isAdmin ? 'add-job.html' : 'index.html';
+                }, 1200);
+            }
+        } catch (err) {
+            showMsg('Error: ' + err.message, 'error');
+        }
+    });
 
     function showMsg(msg, type) {
         authMsg.textContent = msg;

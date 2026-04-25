@@ -1,11 +1,5 @@
 <?php
-$host = "localhost";
-$user = "root";
-$pass = "";
-$db   = "job_portal";
-
-$conn = new mysqli($host, $user, $pass, $db);
-
+$conn = new mysqli("localhost", "root", "", "job_portal");
 if ($conn->connect_error) {
     die(json_encode(["error" => "Connection failed: " . $conn->connect_error]));
 }

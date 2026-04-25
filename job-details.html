@@ -14,7 +14,6 @@
             <a href="index.html" id="nav-logo"><i class="fa-solid fa-user-tie"></i>Job-Tracker</a>
             <ul id="nav-menu">
                 <li><a href="index.html">Home</a></li>
-                
                 <li><a href="job.html">Browse Jobs</a></li>
                 <li><a href="contact.html">Contact</a></li>
                 <li><button id="join-btn">Join</button></li>
@@ -32,50 +31,6 @@
     </header>
 
     <div id="jobDetails" class="extra-space-top"></div>
-
-    <footer class="footer">
-        <div>
-            <div class="top">
-                <div class="footer-left">
-                    <p>Search your desired jobs.</p>
-                </div>
-                <div class="footer-right">
-                    <p>Contact us</p>
-                    <a href="#"><i class="fa-regular fa-envelope"></i></a>
-                    <a href="#"><i class="fa-brands fa-facebook"></i></a>
-                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
-                </div>
-            </div>
-            <div class="bottom">
-                <div>
-                    <h3>Project</h3>
-                    <a href="#">Change Log</a>
-                    <a href="#">Status</a>
-                    <a href="#">Status License</a>
-                    <a href="#">All Versions</a>
-                </div>
-                <div>
-                    <h3>Community</h3>
-                    <a href="#">GitHub</a>
-                    <a href="#">Issues</a>
-                    <a href="#">Project</a>
-                    <a href="#">Twitter</a>
-                </div>
-                <div>
-                    <h3>Help</h3>
-                    <a href="#">Support</a>
-                    <a href="#">Troubleshooting</a>
-                    <a href="#">Contact Us</a>
-                </div>
-                <div>
-                    <h3>Others</h3>
-                    <a href="#">Terms of Service</a>
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">License</a>
-                </div>
-            </div>
-        </div>
-    </footer>
 
     <!-- Apply Modal -->
     <div id="apply-overlay" class="auth-overlay hidden">
@@ -156,165 +111,190 @@
         </div>
     </div>
 
+    <footer class="footer">
+        <div>
+            <div class="top">
+                <div class="footer-left">
+                    <p>Search your desired jobs.</p>
+                </div>
+                <div class="footer-right">
+                    <p>Contact us</p>
+                    <a href="#"><i class="fa-regular fa-envelope"></i></a>
+                    <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                </div>
+            </div>
+            <div class="bottom">
+                <div>
+                    <h3>Project</h3>
+                    <a href="#">Change Log</a>
+                    <a href="#">Status</a>
+                    <a href="#">Status License</a>
+                    <a href="#">All Versions</a>
+                </div>
+                <div>
+                    <h3>Community</h3>
+                    <a href="#">GitHub</a>
+                    <a href="#">Issues</a>
+                    <a href="#">Project</a>
+                    <a href="#">Twitter</a>
+                </div>
+                <div>
+                    <h3>Help</h3>
+                    <a href="#">Support</a>
+                    <a href="#">Troubleshooting</a>
+                    <a href="#">Contact Us</a>
+                </div>
+                <div>
+                    <h3>Others</h3>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">License</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
     <script src="job-list.js"></script>
-<script src="toggle.js"></script>
-<script src="auth.js"></script>
-<script>
-    const urlParam = new URLSearchParams(window.location.search);
-    const jobId    = urlParam.get("id");
+    <script src="toggle.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        const urlParam = new URLSearchParams(window.location.search);
+        const jobId    = urlParam.get("id");
+        const pathParts = window.location.pathname.split('/');
+        const base = window.location.protocol + '//' + window.location.host + '/' + pathParts[1];
 
-    async function loadJobDetails() {
-        let job = null;
+        async function loadJobDetails() {
+            let job = null;
 
-        // Try DB first
-        try {
-            const res  = await fetch('api/get-jobs.php');
-            const jobs = await res.json();
-            if (Array.isArray(jobs)) {
-                job = jobs.find(j => String(j.id) === String(jobId));
+            // Try DB first
+            try {
+                const res  = await fetch(base + '/api/get-jobs.php');
+                const text = await res.text();
+                const jobs = JSON.parse(text);
+                if (Array.isArray(jobs)) {
+                    job = jobs.find(j => String(j.id) === String(jobId));
+                }
+            } catch(e) {}
+
+            // Fallback to hardcoded
+            if (!job && typeof hardcodedJobs !== 'undefined') {
+                job = hardcodedJobs.find(j => String(j.id) === String(jobId));
+                if (!job) job = hardcodedJobs[parseInt(jobId)];
             }
-        } catch(e) {}
 
-        // Fallback to hardcoded
-        if (!job && typeof hardcodedJobs !== 'undefined') {
-            job = hardcodedJobs[jobId];
-        }
+            if (!job) {
+                document.getElementById('jobDetails').innerHTML =
+                    '<p style="text-align:center; padding:60px; color:#888;">Job not found. <a href="job.html">Go back</a></p>';
+                return;
+            }
 
-        // Last fallback to jobCategory
-        if (!job && typeof jobCategory !== 'undefined') {
-            job = jobCategory[jobId];
-        }
-
-        if (!job) {
-            document.getElementById('jobDetails').innerHTML =
-                '<p style="text-align:center; padding:60px; color:#888;">Job not found. <a href="job.html">Go back</a></p>';
-            return;
-        }
-
-        document.getElementById('jobDetails').innerHTML = `
-            <div class="job-header">
-                <div class="job-img-row">
-                    <img src="${job.image || 'google.png'}" alt="image" onerror="this.src='google.png'">
-                    <div>
-                        <h2>${job.company}</h2>
-                        <span>${job.location}</span>
+            document.getElementById('jobDetails').innerHTML = `
+                <div class="job-header">
+                    <div class="job-img-row">
+                        <img src="${job.image || 'google.png'}" alt="image" onerror="this.src='google.png'">
+                        <div>
+                            <h2>${job.company}</h2>
+                            <span>${job.location}</span>
+                        </div>
+                    </div>
+                    <button id="apply-btn" style="padding:8px 14px; background:#6b0f35; color:#fff; border:none; border-radius:5px; cursor:pointer;">
+                        Apply Now
+                    </button>
+                </div>
+                <div class="features">
+                    <div class="fe-box">
+                        <div class="fe-box-in"><img src="vacancy.png" alt=""><h3>Vacancy</h3><p>${job.vacancy}</p></div>
+                        <div class="fe-box-in"><img src="fe 1.png" alt=""><h3>Position</h3><p>${job.title}</p></div>
+                        <div class="fe-box-in"><img src="hour.png" alt=""><h3>Hours</h3><p>${job.hours}</p></div>
+                        <div class="fe-box-in"><img src="salary.png" alt=""><h3>Salary</h3><p>${job.rate}</p></div>
                     </div>
                 </div>
-                <button id="apply-btn" 
-  style="padding:8px 14px; background:#877894; color:#fff; border:none; border-radius:5px; cursor:pointer;">
-  Apply Now
-</button>
-            </div>
-
-            <div class="features">
-                <div class="fe-box">
-                    <div class="fe-box-in">
-                        <img src="vacancy.png" alt="vacancy-image">
-                        <h3>Vacancy</h3>
-                        <p>${job.vacancy}</p>
-                    </div>
-                    <div class="fe-box-in">
-                        <img src="fe 1.png" alt="position-image">
-                        <h3>Position</h3>
-                        <p>${job.title}</p>
-                    </div>
-                    <div class="fe-box-in">
-                        <img src="hour.png" alt="hour-image">
-                        <h3>Hours</h3>
-                        <p>${job.hours}</p>
-                    </div>
-                    <div class="fe-box-in">
-                        <img src="salary.png" alt="salary-image">
-                        <h3>Salary</h3>
-                        <p>${job.rate}</p>
-                    </div>
+                <div class="job-description">
+                    <h3>Job Description</h3><p>${job.description}</p>
+                    <h3>Employment Status</h3><p>- ${job.av || job.type || 'Full Time'}</p>
+                    <h3>Workplace</h3><p>- ${job.workplace}</p>
+                    <h3>Educational Requirements</h3><p>- ${job.education}</p>
+                    <h3>Experience Requirements</h3><p>- ${job.experience}</p>
                 </div>
-            </div>
+            `;
 
-            <div class="job-description">
-                <h3>Job Description</h3>
-                <p>${job.description}</p>
-
-                <h3>Employment Status</h3>
-                <p>- ${job.av || job.type || 'Full Time'}</p>
-
-                <h3>Workplace</h3>
-                <p>- ${job.workplace}</p>
-
-                <h3>Educational Requirements</h3>
-                <p>- ${job.education}</p>
-
-                <h3>Experience Requirements</h3>
-                <p>- ${job.experience}</p>
-            </div>
-        `;
-
-        // Apply button
-        document.getElementById('apply-btn').addEventListener('click', function() {
-            document.getElementById('apply-job-title').textContent   = 'Apply for ' + job.title;
-            document.getElementById('apply-company-name').textContent = job.company;
-            document.getElementById('apply-overlay').classList.remove('hidden');
-        });
-    }
-
-    // Wait for job-list.js to finish loading then run
-    window.addEventListener('load', loadJobDetails);
-
-    // Submit application
-    document.addEventListener('click', function(e) {
-        if (e.target.id !== 'apply-submit') return;
-
-        const name  = document.getElementById('apply-name').value.trim();
-        const email = document.getElementById('apply-email').value.trim();
-        const phone = document.getElementById('apply-phone').value.trim();
-        const msg   = document.getElementById('apply-msg');
-
-        if (!name || !email || !phone) {
-            msg.textContent = 'Please fill in all required fields.';
-            msg.style.color = 'red';
-            return;
+            document.getElementById('apply-btn').addEventListener('click', function() {
+                document.getElementById('apply-job-title').textContent    = 'Apply for ' + job.title;
+                document.getElementById('apply-company-name').textContent = job.company;
+                document.getElementById('apply-overlay').classList.remove('hidden');
+            });
         }
 
-        msg.textContent = 'Submitting...';
-        msg.style.color = '#888';
+        window.addEventListener('load', loadJobDetails);
 
-        const formData = new FormData();
-        formData.append('job_id', jobId);
-        formData.append('name',   name);
-        formData.append('email',  email);
-        formData.append('phone',  phone);
+        // Submit application
+        document.addEventListener('click', function(e) {
+            if (e.target.id !== 'apply-submit') return;
 
-        fetch('api/apply.php', {
-            method: 'POST',
-            body:   formData
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                msg.textContent = '✅ Application submitted!';
-                msg.style.color = 'green';
-                document.getElementById('apply-name').value  = '';
-                document.getElementById('apply-email').value = '';
-                document.getElementById('apply-phone').value = '';
-                setTimeout(() => {
-                    document.getElementById('apply-overlay').classList.add('hidden');
-                    msg.textContent = '';
-                }, 1800);
-            } else {
-                msg.textContent = '❌ ' + data.error;
+            const name  = document.getElementById('apply-name').value.trim();
+            const email = document.getElementById('apply-email').value.trim();
+            const phone = document.getElementById('apply-phone').value.trim();
+            const msg   = document.getElementById('apply-msg');
+
+            if (!name || !email || !phone) {
+                msg.textContent = 'Please fill in all required fields.';
                 msg.style.color = 'red';
+                return;
             }
-        })
-        .catch(() => {
-            msg.textContent = '❌ Server error. Please try again.';
-            msg.style.color = 'red';
-        });
-    });
 
-    // Close apply modal
-    document.getElementById('apply-overlay').addEventListener('click', function(e) {
-        if (e.target === this) this.classList.add('hidden');
-    });
-</script>
+            msg.textContent = 'Submitting...';
+            msg.style.color = '#888';
+
+            const formData = new FormData();
+            formData.append('job_id', jobId);
+            formData.append('name',   name);
+            formData.append('email',  email);
+            formData.append('phone',  phone);
+
+            fetch(base + '/api/apply.php', {
+                method: 'POST',
+                body:   formData
+            })
+            .then(res => res.text())
+            .then(text => {
+                let data;
+                try {
+                    const jsonStart = text.indexOf('{');
+                    data = JSON.parse(jsonStart !== -1 ? text.substring(jsonStart) : text);
+                } catch(e) {
+                    msg.textContent = '❌ Server error.';
+                    msg.style.color = 'red';
+                    return;
+                }
+
+                if (data.success) {
+                    msg.textContent = '✅ Application submitted!';
+                    msg.style.color = 'green';
+                    document.getElementById('apply-name').value  = '';
+                    document.getElementById('apply-email').value = '';
+                    document.getElementById('apply-phone').value = '';
+                    setTimeout(() => {
+                        document.getElementById('apply-overlay').classList.add('hidden');
+                        msg.textContent = '';
+                    }, 1800);
+                } else {
+                    msg.textContent = '❌ ' + data.error;
+                    msg.style.color = 'red';
+                }
+            })
+            .catch(err => {
+                msg.textContent = '❌ Error: ' + err.message;
+                msg.style.color = 'red';
+            });
+        });
+
+        const applyOverlay = document.getElementById('apply-overlay');
+        if (applyOverlay) {
+            applyOverlay.addEventListener('click', function(e) {
+                if (e.target === this) this.classList.add('hidden');
+            });
+        }
+    </script>
 </body>
 </html>

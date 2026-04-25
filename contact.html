@@ -176,7 +176,7 @@
             msg.style.color = '#888';
 
             try {
-                const res  = await fetch('api/contact.php', {
+                const res  = await fetch('/Job-Tracker-Portal/api/contact.php', {
                     method:  'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body:    JSON.stringify({ name, email, message })
